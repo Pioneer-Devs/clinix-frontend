@@ -1,0 +1,6 @@
+{
+  "name": "Clinix OS",
+  "description": "High-fidelity clinical operating system featuring interactive dashboards, intelligent encounters, review portals, and student clinical competency tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

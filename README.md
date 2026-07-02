@@ -1,206 +1,743 @@
-# Clinix
-## The Sovereign Clinical Agent
+# Clinix Frontend
 
-> *Every supervised patient encounter produces two things: verified competence for the student, and portable health sovereignty for the patient.*
+> The Sovereign Clinical Agent — React Dashboard
 
----
-
-## What We Are Building
-
-Clinix is an agentic clinical operating system for Nigerian teaching hospitals. It transforms the most common transaction in healthcare — the supervised patient encounter — into a dual-value event that benefits both the learner and the patient, permanently.
-
-For **medical students**, Clinix replaces paper notebooks with AI-guided documentation, real-time diagnostic support, and a cryptographically-signed portfolio of verified clinical competence.
-
-For **patients**, Clinix replaces lost paper cards with an encrypted, portable health record pushed directly to their personal data wallet — accessible via SMS, QR code, or any hospital system.
-
-For **supervising physicians**, Clinix replaces scattered paper reviews with a unified dashboard for encounter oversight, competency tracking, and one-click approval workflows.
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5+-646CFF.svg)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4+-38B2AC.svg)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6.svg)](https://www.typescriptlang.org/)
 
 ---
 
-## The Problem
+## Table of Contents
 
-### The Invisible Curriculum
-Every year, 40,000 Nigerian medical students perform millions of supervised consultations across teaching hospitals. They document symptoms, conduct exams, form diagnoses, and prescribe treatments — all on paper that gets lost, water-damaged, or forgotten. When they graduate, they hold a degree with zero documented proof of their clinical competence. MDCN licensing is exam-based. Residency applications are blind. Their practical growth is invisible.
-
-### The Sovereignty Gap
-Medical records in Nigeria belong to hospitals, not people. A patient who visits LAUTECH today and LUTH tomorrow must recount their entire history from memory. They lose their cards, forget their medications, and restart from zero at every new facility. There is no continuity of care across a fragmented health system. The people who need their records most — the poor, the elderly, the rural — are the least likely to have them.
-
-### The Supervision Bottleneck
-Supervising physicians review student notes on paper, with no systematic way to track a student's accuracy over time, identify dangerous patterns early, or verify that patient safety standards are maintained. The feedback loop is broken.
-
----
-
-## The Solution
-
-Clinix captures the value of every supervised encounter and splits it: **competence proof for the student, data sovereignty for the patient.** One transaction. Dual justice.
-
-### How It Works
-
-1. **The student opens Clinix** and selects a patient from the day's queue or searches an existing record.
-
-2. **They document the encounter** — chief complaint, history, associated symptoms. As they type, Clinix's AI agent analyzes the input in real-time via the Model Context Protocol (MCP).
-
-3. **The AI acts, not just chats.** It detects clinical patterns, suggests probable diagnoses with confidence scores, and triggers **Action Skills** — drafted workflows that check medication stock, verify test availability, and schedule follow-ups. Every action is drafted, not executed. Human verification is mandatory.
-
-4. **The student conducts the physical exam**, enters vitals, and confirms or modifies the AI's suggestions. They document their working diagnosis and treatment plan.
-
-5. **The supervisor reviews** the encounter in a unified dashboard — comparing the student's diagnosis, the AI's suggestion, and their own assessment — then approves, requests changes, or rejects with one click.
-
-6. **Upon approval, the encounter is finalized.** The student earns **Verified Clinical Credits** across five competency categories, cryptographically signed and added to their permanent portfolio.
-
-7. **Simultaneously, the patient receives an SMS** with a QR code. Scanning it pushes an encrypted summary of the entire encounter — diagnosis, vitals, treatment, follow-up — to their **Chekk Data Wallet**. They own the decryption key. The record is theirs forever, portable to any hospital.
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Development Workflow](#development-workflow)
+- [Component Library](#component-library)
+- [State Management](#state-management)
+- [API Integration](#api-integration)
+- [Testing](#testing)
+- [Build & Deployment](#build--deployment)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## Core Features
+## Overview
 
-### AI-Assisted Encounter Documentation
-Real-time symptom analysis, differential diagnosis suggestions, and structured documentation that auto-saves every 30 seconds. The AI triggers after 10 characters of input, debounced at 500ms. The student remains in full control — every AI suggestion requires explicit confirmation.
+The Clinix frontend is a clinical operating system dashboard built for Nigerian medical students and supervising physicians. It provides:
 
-**Target:** < 8 minutes per encounter.
+- Real-time AI-assisted encounter documentation
+- Patient queue management with priority indicators
+- MCP Action Skill visualization and approval workflows
+- Supervisor review and one-click approval interfaces
+- Student portfolio with competency radar charts
+- Patient data wallet QR code generation and SMS confirmation
+- Responsive design for desktop (primary) and tablet (secondary)
 
-### MCP Action Skills
-Agentic workflows that trigger based on clinical patterns:
-
-| Skill | Trigger | Actions Drafted |
-|-------|---------|-----------------|
-| **Malaria Detection** | Fever + headache + chills | RDT stock check, Coartem availability, Day 3 follow-up |
-| **Cardiac Alert** | Chest pain + SOB + age > 40 | ECG order, cardiology referral, troponin stock check |
-| **Diabetes Management** | RBS > 200 or known diabetic | Insulin stock check, HbA1c suggestion, hypoglycemia risk flag |
-| **Prenatal Screening** | Pregnant patient | Gestational age tracking, high-risk marker flags, next visit scheduling |
-
-All actions are logged for audit and accuracy tracking. All require human verification before execution.
-
-### Patient Data Wallet (Chekk Integration)
-When an encounter is finalized and supervisor-approved, Clinix generates an encrypted clinical summary (AES-256 at rest, TLS 1.3 in transit) and pushes it to the patient's Chekk Data Wallet via API. The patient receives an SMS with a QR code — no smartphone required. The record includes:
-
-- Encounter date and location
-- Chief complaint and history
-- Vitals (temperature, BP, pulse, SpO2)
-- Working diagnosis
-- Investigations ordered
-- Treatment plan and medications
-- Follow-up instructions
-- Student and supervisor names
-- Cryptographic signature
-
-### Verified Clinical Credits & Portfolio
-Every approved encounter earns credits across five categories:
-
-| Category | Points | Verification Method |
-|----------|--------|---------------------|
-| History Taking | 2 | Supervisor review of documentation completeness |
-| Physical Examination | 2 | Vitals recorded + exam notes present |
-| Differential Diagnosis | 2 | AI confidence > 70% OR supervisor override |
-| Treatment Planning | 2 | Medications appropriate for diagnosis |
-| Patient Communication | 1 | Patient satisfaction (optional feedback) |
-
-The portfolio includes:
-- Total encounters, diagnoses, and accuracy rate
-- Competency radar chart (6 axes)
-- Verified procedures list with cryptographic seals
-- Exportable PDF for MDCN and residency applications
-- Tamper-evident audit trail
-
-### Supervisor Dashboard
-- Queue of encounters pending review
-- Side-by-side comparison: student diagnosis vs. AI suggestion vs. supervisor assessment
-- One-click approve / request changes / reject
-- Student performance trends (accuracy over time)
-- Flagged encounters (high-risk, unusual patterns)
-- Batch approval for low-risk, routine cases
+The UI is designed around a **fixed sidebar + scrollable content area** layout, with a teal-forward color system, card-based information architecture, and motion-rich interactions.
 
 ---
 
-## The Technology Stack
+## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | React 18, Vite, Tailwind CSS, React Query, Zustand |
-| **Backend** | FastAPI, PostgreSQL, SQLModel, Redis |
-| **AI Engine** | OpenAI GPT-4 via Model Context Protocol (MCP) |
-| **Data Wallet** | Chekk.dev API |
-| **Security** | JWT (15-min expiry), bcrypt, AES-256 encryption, TLS 1.3 |
-| **Deployment** | Chekk.dev, Docker, AWS/GCP |
-
----
-
-## Design Philosophy
-
-### For the Student
-- **Frictionless documentation.** Auto-save, smart templates, and voice-to-text ensure the tool saves time, not adds burden.
-- **Learning, not replacing.** The AI suggests; the student decides. The supervisor verifies. The system teaches, not dictates.
-- **Proof, not promises.** Every encounter produces a signed credit. Every credit builds a portfolio. Graduation comes with evidence.
-
-### For the Patient
-- **Sovereignty, not storage.** The patient owns the decryption key. The record is theirs, not the hospital's.
-- **Inclusion, not exclusion.** SMS fallback ensures patients without smartphones are not left behind.
-- **Portability, not lock-in.** The record travels with the patient to any hospital, any city, any country.
-
-### For the Supervisor
-- **Oversight, not micromanagement.** Batch approval for routine cases. Flags for high-risk patterns. Time saved, safety maintained.
-- **Data, not intuition.** Student accuracy trends, encounter volumes, and competency gaps — all visible, all actionable.
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| Framework | React 18 | Component-based UI |
+| Build Tool | Vite 5 | Fast dev server, optimized builds |
+| Language | TypeScript 5 | Type safety, IntelliSense |
+| Styling | Tailwind CSS 3.4 | Utility-first responsive design |
+| State (Server) | TanStack Query (React Query) | Server state caching, background refetching, optimistic updates |
+| State (Client) | Zustand | Lightweight global state (auth, UI, sidebar) |
+| Routing | React Router v6 | SPA navigation, protected routes, lazy loading |
+| Forms | React Hook Form + Zod | Type-safe form handling and validation |
+| HTTP Client | Axios | API communication with interceptors |
+| Charts | Chart.js + react-chartjs-2 | Competency radar, trend lines, stats |
+| QR Codes | qrcode.react | Wallet QR generation |
+| Icons | Lucide React | Consistent iconography |
+| Animations | Framer Motion | Page transitions, modal animations, hover effects |
+| Notifications | Sonner | Toast notifications |
+| Dates | date-fns | Date formatting and manipulation |
 
 ---
 
-## Impact
+## Prerequisites
 
-### For Medical Students
-- Graduate with a **verified, portable portfolio** of clinical competence
-- Receive **real-time feedback** on diagnostic accuracy
-- Build **evidence-based applications** for MDCN licensing and international residencies
-- Reduce documentation time by **60%** through AI-assisted workflows
+- **Node.js** 18.17+ (LTS recommended)
+- **npm** 9+ or **pnpm** 8+ or **yarn** 1.22+
+- **Git**
 
-### For Patients
-- Own a **complete, encrypted health record** after every visit
-- Experience **continuity of care** across hospitals and cities
-- Access records via **SMS and QR code** — no smartphone required
-- Reduce repeated history-taking and redundant tests
+Verify your Node version:
 
-### For the Healthcare System
-- Produce **documented, competent graduates** with measurable clinical skills
-- Reduce **medical errors** through AI-assisted pattern recognition and supervisor oversight
-- Enable **data-driven quality improvement** through encounter analytics
-- Build toward a **national standard** for clinical education documentation
+```bash
+node -v  # Should print v18.17.0 or higher
+```
 
 ---
 
-## Why Now
+## Getting Started
 
-1. **Agentic AI (MCP)** has matured from conversational to operational. AI can now interface with inventory systems, scheduling tools, and referral networks in structured, auditable ways.
+### 1. Clone the Repository
 
-2. **Chekk's data portability infrastructure** is production-ready and actively seeking health integrations. Patient-owned data wallets are no longer theoretical.
+```bash
+git clone https://github.com/your-org/clinix-frontend.git
+cd clinix-frontend
+```
 
-3. **Post-COVID digitization** has made Nigerian teaching hospitals more receptive to clinical workflow tools. The infrastructure and appetite exist.
+### 2. Install Dependencies
 
-4. **MDCN is modernizing** — a verified, digital portfolio system aligns with upcoming credentialing reforms and international accreditation standards.
+```bash
+npm install
+# or
+pnpm install
+# or
+yarn install
+```
+
+### 3. Configure Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your local backend URL and other configs.
+
+### 4. Start Development Server
+
+```bash
+npm run dev
+# or
+pnpm dev
+```
+
+The app will be available at `http://localhost:5173`.
 
 ---
 
-## What Makes It Defensible
+## Project Structure
 
-| Moat | Mechanism |
-|------|-----------|
-| **Network Effects** | More students → more encounters → more patient wallets → more hospital demand for wallet-compatible systems |
-| **Institutional Lock-in** | Once MDCN recognizes Clinix portfolios, students cannot switch. Once patients own wallets, they resist returning to paper |
-| **Data Advantage** | Every encounter improves AI accuracy on local disease patterns (malaria, typhoid, Lassa fever) — a training advantage Western diagnostic tools cannot replicate |
-| **Regulatory Alignment** | Positioned as an *education and documentation* tool, not a diagnostic device. Supervisor oversight maintains patient safety and regulatory compliance |
+```
+clinix-frontend/
+├── public/
+│   └── favicon.ico
+├── src/
+│   ├── main.tsx                 # Application entry point
+│   ├── App.tsx                  # Root component with routing
+│   ├── index.css                # Global styles + Tailwind directives
+│   │
+│   ├── components/              # Reusable UI components
+│   │   ├── ui/                  # Primitive components (buttons, inputs, cards)
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   ├── Avatar.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   ├── Toast.tsx
+│   │   │   └── Skeleton.tsx
+│   │   ├── layout/
+│   │   │   ├── Sidebar.tsx      # Fixed 260px navigation sidebar
+│   │   │   ├── TopBar.tsx       # Page title + action buttons
+│   │   │   ├── Layout.tsx       # Sidebar + TopBar + Content wrapper
+│   │   │   └── MobileNav.tsx    # Collapsible mobile navigation
+│   │   ├── dashboard/
+│   │   │   ├── StatCard.tsx     # Metric card with trend
+│   │   │   ├── PatientQueue.tsx # Queue list with priority badges
+│   │   │   ├── PatientItem.tsx  # Individual queue item
+│   │   │   ├── AIPanel.tsx      # Dark AI suggestions panel
+│   │   │   ├── AISuggestion.tsx # Individual suggestion card
+│   │   │   ├── ActivityFeed.tsx # Timeline of recent events
+│   │   │   └── PortfolioPreview.tsx # Mini radar chart + credits
+│   │   ├── encounters/
+│   │   │   ├── PatientSelector.tsx
+│   │   │   ├── ChiefComplaintForm.tsx
+│   │   │   ├── SymptomTags.tsx
+│   │   │   ├── SeverityPicker.tsx
+│   │   │   ├── AIDiagnosisCard.tsx
+│   │   │   ├── MCPActionsList.tsx
+│   │   │   ├── PhysicalExamForm.tsx
+│   │   │   ├── VitalsGrid.tsx
+│   │   │   ├── AssessmentPlanForm.tsx
+│   │   │   └── EncounterTimeline.tsx
+│   │   ├── supervisor/
+│   │   │   ├── ReviewQueue.tsx
+│   │   │   ├── ComparisonView.tsx
+│   │   │   ├── StudentAssessment.tsx
+│   │   │   ├── AIAssessment.tsx
+│   │   │   └── SupervisorActions.tsx
+│   │   ├── portfolio/
+│   │   │   ├── PortfolioHeader.tsx
+│   │   │   ├── StatsGrid.tsx
+│   │   │   ├── CompetencyRadar.tsx
+│   │   │   ├── VerifiedProcedures.tsx
+│   │   │   └── ActivityList.tsx
+│   │   └── wallet/
+│   │       ├── WalletPushModal.tsx
+│   │       ├── QRCodeDisplay.tsx
+│   │       ├── SMSConfirmation.tsx
+│   │       └── ExpiryTimer.tsx
+│   │
+│   ├── pages/                   # Route-level page components
+│   │   ├── DashboardPage.tsx
+│   │   ├── NewEncounterPage.tsx
+│   │   ├── EncounterDetailPage.tsx
+│   │   ├── PatientsPage.tsx
+│   │   ├── PortfolioPage.tsx
+│   │   ├── WalletsPage.tsx
+│   │   ├── SkillsPage.tsx
+│   │   ├── SupervisorPage.tsx
+│   │   ├── InventoryPage.tsx
+│   │   ├── AnalyticsPage.tsx
+│   │   ├── LoginPage.tsx
+│   │   └── RegisterPage.tsx
+│   │
+│   ├── hooks/                   # Custom React hooks
+│   │   ├── useAuth.ts           # Authentication state + login/logout
+│   │   ├── usePatients.ts     # Patient data fetching
+│   │   ├── useEncounters.ts     # Encounter CRUD operations
+│   │   ├── useAIAnalysis.ts     # AI analysis trigger + polling
+│   │   ├── usePortfolio.ts      # Portfolio data + export
+│   │   ├── useWallet.ts       # Wallet push + QR generation
+│   │   ├── useSupervisor.ts     # Review queue + approval
+│   │   └── useDebounce.ts       # Generic debounce hook
+│   │
+│   ├── stores/                  # Zustand state stores
+│   │   ├── authStore.ts         # Auth state (user, tokens, login/logout)
+│   │   ├── uiStore.ts           # UI state (sidebar, modals, toasts)
+│   │   └── encounterStore.ts    # Draft encounter state (auto-save)
+│   │
+│   ├── services/                # API service functions
+│   │   ├── api.ts               # Axios instance with interceptors
+│   │   ├── authService.ts
+│   │   ├── patientService.ts
+│   │   ├── encounterService.ts
+│   │   ├── aiService.ts
+│   │   ├── walletService.ts
+│   │   ├── portfolioService.ts
+│   │   └── supervisorService.ts
+│   │
+│   ├── lib/                     # Utilities and helpers
+│   │   ├── utils.ts             # cn() helper (clsx + tailwind-merge)
+│   │   ├── constants.ts         # App constants (routes, roles, severities)
+│   │   ├── formatters.ts        # Date, number, phone formatters
+│   │   └── validators.ts        # Zod schemas for forms
+│   │
+│   ├── types/                   # TypeScript type definitions
+│   │   ├── auth.ts
+│   │   ├── patient.ts
+│   │   ├── encounter.ts
+│   │   ├── ai.ts
+│   │   ├── wallet.ts
+│   │   ├── portfolio.ts
+│   │   └── index.ts
+│   │
+│   └── assets/                  # Static assets
+│       ├── logo.svg
+│       └── illustrations/
+│
+├── .env.example
+├── .env
+├── .gitignore
+├── vite.config.ts
+├── tailwind.config.js
+├── tsconfig.json
+├── tsconfig.node.json
+├── package.json
+├── package-lock.json
+└── README.md
+```
 
 ---
 
-## The Vision
+## Environment Variables
 
-**By 2030, every medical student in Nigeria will graduate with a Clinix-verified clinical portfolio, and every Nigerian patient will own their complete health history in a portable, encrypted data wallet.**
+Create a `.env` file in the project root:
+
+```env
+# API
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+
+# App
+VITE_APP_NAME=Clinix
+VITE_APP_VERSION=1.0.0
+
+# Features
+VITE_ENABLE_MOCK_AI=false
+VITE_ENABLE_VOICE_INPUT=false
+
+# Chekk
+VITE_CHEKK_WALLET_URL=https://wallet.chekk.io/access
+
+# Analytics (future)
+# VITE_ANALYTICS_ID=...
+```
+
+> ⚠️ **All Vite env vars must be prefixed with `VITE_` to be exposed to the client.**
 
 ---
 
-## The Ask
+## Development Workflow
 
-We are building the clinical layer that Nigerian medical education and patient care have never had. We need deployment partnership and mentorship to pilot at LAUTECH Teaching Hospital and prove that every supervised consultation can produce value for both the student and the patient.
+### Available Scripts
 
-We are not just building software. We are building the **proof of competence** that the next generation of Nigerian doctors will graduate with, and the **data sovereignty** that every patient deserves.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with HMR |
+| `npm run build` | Production build with type checking |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint across src/ |
+| `npm run lint:fix` | Auto-fix ESLint issues |
+| `npm run typecheck` | Run TypeScript compiler (no emit) |
+| `npm run test` | Run Vitest test suite |
+| `npm run test:ui` | Run tests with UI coverage report |
+| `npm run format` | Format code with Prettier |
+
+### Code Style
+
+We use **ESLint** + **Prettier** + **TypeScript strict mode**.
+
+Key rules:
+- Functional components with explicit return types
+- Props interfaces named `{ComponentName}Props`
+- Custom hooks prefixed with `use`
+- Zustand stores use selectors for performance
+- API calls centralized in `services/`, never in components directly
+
+### Git Workflow
+
+```bash
+# Create feature branch
+git checkout -b feature/encounter-auto-save
+
+# Make changes, commit with conventional commits
+git commit -m "feat: add auto-save every 30s to encounter draft"
+
+# Push and open PR
+git push origin feature/encounter-auto-save
+```
 
 ---
 
-*Clinix — The Sovereign Clinical Agent*  
-*Built by Nigerian builders, for Nigerian students and patients.*
+## Component Library
+
+### Design Tokens (Tailwind Config)
+
+```js
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#0d9488',
+          light: '#14b8a6',
+          dark: '#0f766e',
+        },
+        accent: '#f43f5e',
+        success: '#10b981',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        background: '#f8fafc',
+        card: '#ffffff',
+        text: {
+          DEFAULT: '#0f172a',
+          light: '#64748b',
+        },
+        border: '#e2e8f0',
+      },
+      borderRadius: {
+        card: '16px',
+        button: '10px',
+        badge: '20px',
+      },
+      boxShadow: {
+        card: '0 1px 3px rgba(0,0,0,0.1)',
+        'card-hover': '0 10px 15px -3px rgba(0,0,0,0.1)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+}
+```
+
+### Key Components
+
+#### StatCard
+```tsx
+<StatCard
+  icon={<Users className="w-5 h-5" />}
+  value={47}
+  label="Total Encounters"
+  trend={+12}
+  trendDirection="up"
+  color="primary"
+/>
+```
+
+#### PatientItem
+```tsx
+<PatientItem
+  patient={patient}
+  selected={selectedId === patient.id}
+  onClick={() => setSelectedId(patient.id)}
+/>
+```
+
+#### AIPanel
+```tsx
+<AIPanel
+  isAnalyzing={isAnalyzing}
+  suggestions={aiSuggestions}
+  mcpActions={mcpActions}
+  onAccept={(id) => handleAccept(id)}
+  onModify={(id) => handleModify(id)}
+/>
+```
+
+---
+
+## State Management
+
+### Server State (TanStack Query)
+
+```tsx
+// hooks/usePatients.ts
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/services/patientService';
+
+export function usePatients(search?: string) {
+  return useQuery({
+    queryKey: ['patients', search],
+    queryFn: () => patientService.list({ search }),
+    staleTime: 30 * 1000, // 30s
+  });
+}
+```
+
+### Client State (Zustand)
+
+```tsx
+// stores/authStore.ts
+import { create } from 'zustand';
+
+interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  accessToken: null,
+  login: async (email, password) => {
+    const { user, accessToken } = await authService.login(email, password);
+    set({ user, accessToken });
+  },
+  logout: () => set({ user: null, accessToken: null }),
+}));
+```
+
+### Draft Encounter State (Auto-save)
+
+```tsx
+// stores/encounterStore.ts
+interface EncounterDraft {
+  patientId: string;
+  chiefComplaint: string;
+  symptoms: string[];
+  severity: Severity;
+  vitals: Vitals;
+  examNotes: string;
+  workingDiagnosis: string;
+  treatmentPlan: string;
+  lastSaved: Date | null;
+}
+
+export const useEncounterStore = create<EncounterDraft>((set, get) => ({
+  // ... state + auto-save logic with 30s debounce
+}));
+```
+
+---
+
+## API Integration
+
+### Axios Setup
+
+```tsx
+// services/api.ts
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor: attach JWT
+api.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Response interceptor: refresh token on 401
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Attempt token refresh
+      const newToken = await authService.refresh();
+      useAuthStore.getState().setAccessToken(newToken);
+      return api.request(error.config);
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default api;
+```
+
+### Service Pattern
+
+```tsx
+// services/encounterService.ts
+import api from './api';
+import type { Encounter, CreateEncounterDTO } from '@/types';
+
+export const encounterService = {
+  create: (data: CreateEncounterDTO) =>
+    api.post<Encounter>('/encounters', data),
+
+  analyze: (id: string) =>
+    api.post(`/encounters/${id}/ai-analyze`),
+
+  update: (id: string, data: Partial<Encounter>) =>
+    api.patch(`/encounters/${id}`, data),
+
+  finalize: (id: string) =>
+    api.post(`/encounters/${id}/finalize`),
+
+  getById: (id: string) =>
+    api.get<Encounter>(`/encounters/${id}`),
+};
+```
+
+---
+
+## Testing
+
+### Test Setup
+
+We use **Vitest** + **React Testing Library** + **MSW** (Mock Service Worker).
+
+```bash
+npm run test        # Run tests
+npm run test:ui     # Run with UI coverage
+npm run test:watch  # Watch mode
+```
+
+### Example Test
+
+```tsx
+// tests/components/StatCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import { StatCard } from '@/components/dashboard/StatCard';
+
+describe('StatCard', () => {
+  it('renders value and label', () => {
+    render(<StatCard value={47} label="Encounters" trend={+12} trendDirection="up" />);
+    expect(screen.getByText('47')).toBeInTheDocument();
+    expect(screen.getByText('Encounters')).toBeInTheDocument();
+    expect(screen.getByText('+12%')).toBeInTheDocument();
+  });
+});
+```
+
+### E2E Testing (Future)
+
+Playwright configuration will be added for critical user flows:
+- Login → New Encounter → AI Analysis → Finalize
+- Supervisor Review → Approve → Wallet Push
+
+---
+
+## Build & Deployment
+
+### Production Build
+
+```bash
+npm run build
+```
+
+Output is generated in `dist/` directory.
+
+### Environment-Specific Builds
+
+| Environment | Command | Notes |
+|-------------|---------|-------|
+| Development | `npm run dev` | HMR, source maps, unminified |
+| Staging | `npm run build -- --mode staging` | Minified, Chekk sandbox |
+| Production | `npm run build` | Minified, optimized, Chekk production |
+
+### Docker Deployment
+
+```dockerfile
+# Dockerfile
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+```
+
+```bash
+docker build -t clinix-frontend:latest .
+docker run -p 80:80 clinix-frontend:latest
+```
+
+### Static Hosting (Chekk.dev / Vercel / Netlify)
+
+```bash
+# Build for static hosting
+npm run build
+
+# Deploy dist/ folder to your platform
+```
+
+> For client-side routing on static hosts, ensure fallback to `index.html` is configured.
+
+---
+
+## Performance Targets
+
+| Metric | Target | How We Achieve It |
+|--------|--------|-------------------|
+| First Contentful Paint | < 1.5s | Code splitting, lazy routes, preloaded critical CSS |
+| Time to Interactive | < 3s | Tree-shaking, minimal JS bundles, React 18 concurrent features |
+| Bundle Size | < 200KB (initial) | Route-based code splitting, dynamic imports for charts |
+| API Response | < 500ms | React Query caching, stale-while-revalidate, optimistic updates |
+| AI Analysis UI | < 3s | Skeleton loaders, streaming response display, debounced triggers |
+
+---
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Layout Changes |
+|------------|-------|----------------|
+| Mobile | < 768px | Sidebar hidden (hamburger), cards stack, stats horizontal scroll |
+| Tablet | 768–1024px | Sidebar collapsible, 2-column grids |
+| Desktop | > 1024px | Full sidebar fixed 260px, 3-column grids, all features visible |
+
+Primary development target is **Desktop (1280px+)**. Tablet is secondary. Mobile is readable but feature-limited.
+
+---
+
+## Accessibility
+
+- All interactive elements have minimum 44px touch targets
+- Color contrast ratios meet WCAG AA (4.5:1 for text)
+- Focus indicators visible on all focusable elements
+- Modal traps focus and closes on Escape key
+- Form labels explicitly associated with inputs
+- Charts have aria-labels and data tables for screen readers
+
+---
+
+## Contributing
+
+### Branch Naming
+
+- `feature/description` — New features
+- `fix/description` — Bug fixes
+- `ui/description` — Design/UX changes
+- `perf/description` — Performance improvements
+
+### Commit Convention
+
+```
+feat: add encounter auto-save with 30s debounce
+fix: correct AI panel scroll on long differential list
+ui: update stat card hover animation duration
+perf: lazy load chart.js only on portfolio page
+```
+
+### PR Checklist
+
+- [ ] Component renders without TypeScript errors (`npm run typecheck`)
+- [ ] All tests pass (`npm run test`)
+- [ ] Linting passes (`npm run lint`)
+- [ ] New components include Storybook story (if applicable)
+- [ ] Responsive design tested at 1280px, 768px, and 375px
+- [ ] Accessibility checked with keyboard navigation
+
+---
+
+## Troubleshooting
+
+### Port already in use
+
+```bash
+# Find and kill process on port 5173
+lsof -ti:5173 | xargs kill -9
+# Or specify different port
+npm run dev -- --port 3000
+```
+
+### TypeScript errors after pulling
+
+```bash
+# Regenerate TypeScript types from backend
+npm run typecheck
+# Clear Vite cache
+rm -rf node_modules/.vite
+```
+
+### API CORS errors
+
+Ensure the backend `CORS_ORIGINS` includes `http://localhost:5173` in development.
+
+### Tailwind classes not applying
+
+```bash
+# Restart Tailwind JIT
+npm run dev
+# Or clear PostCSS cache
+rm -rf node_modules/.cache
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## Contact
+
+- **Project Lead**: Ademilua Adeola — [adeola@clinix.ng](mailto:adeola@clinix.ng)
+- **Frontend Team**: Clinix UI/UX Engineering
+- **Repository**: [github.com/your-org/clinix-frontend](https://github.com/your-org/clinix-frontend)
+
+---
+
+> *Built by Nigerian builders, for Nigerian students and patients.*
