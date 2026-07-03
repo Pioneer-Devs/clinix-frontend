@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://clinix-backend-fptb.onrender.com"
+    }
+  ]
+}
