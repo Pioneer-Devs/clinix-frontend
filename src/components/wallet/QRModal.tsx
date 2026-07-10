@@ -52,8 +52,12 @@ function joinPodPath(podUrl: string, path: string) {
 
 function isAllowedSolidOrigin(url: string) {
   if (!url) return false;
-  const origin = new URL(url).origin;
-  return origin === window.location.origin || origin === 'http://localhost:3000' || origin === 'http://127.0.0.1:3000';
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 export default function QRModal({ patientId, onClose }: QRModalProps) {
