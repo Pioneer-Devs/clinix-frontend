@@ -167,8 +167,6 @@ export default function App() {
   };
 
   const handleEncounterFinalized = async (patientId: string, encounterId: string) => {
-    setWalletPatientId(patientId);
-    setShowWalletSuccess(walletAutoSync);
     await refreshData();
     triggerToast(`Encounter ${encounterId.slice(0, 8)} finalized for review`);
   };
