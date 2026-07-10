@@ -263,6 +263,7 @@ export default function App() {
             error={dataError}
             onRetry={refreshData}
             onStartEncounter={handleStartEncounter}
+            onOpenWallet={(id) => { setWalletPatientId(id); setShowWalletSuccess(true); }}
             onCreatePatient={handleCreatePatient}
             searchValue={searchValue}
           />
