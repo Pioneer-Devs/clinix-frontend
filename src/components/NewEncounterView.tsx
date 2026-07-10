@@ -32,6 +32,7 @@ export default function NewEncounterView({
   onFinalized,
 }: NewEncounterProps) {
   const patient = patients.find(p => p.id === selectedPatientId) || patients[0];
+  const isReadOnly = ['finalized', 'pending_review', 'approved'].includes(patient?.latestEncounterStatus || '');
   const [encounterId, setEncounterId] = useState('');
   const [temp, setTemp] = useState(0);
   const [bp, setBp] = useState('');
@@ -164,6 +165,25 @@ export default function NewEncounterView({
         <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700 font-semibold">{pageError}</div>
       )}
 
+      {isReadOnly && (
+        <div className="rounded-xl border border-border bg-bg-main px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-success" />
+            <span className="text-xs font-bold text-text-primary">
+              {patient.latestEncounterStatus === 'approved' ? 'Encounter approved — record is read-only' :
+               patient.latestEncounterStatus === 'pending_review' ? 'Submitted for review — record is read-only' :
+               'Encounter finalized — record is read-only'}
+            </span>
+          </div>
+          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
+            patient.latestEncounterStatus === 'approved' ? 'bg-success/10 text-success' :
+            'bg-warning/10 text-warning'
+          }`}>
+            {patient.latestEncounterStatus?.replace('_', ' ')}
+          </span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 flex-1 pb-20">
         <div className="flex flex-col gap-5">
           <div className="bg-white rounded-lg border border-border shadow-sm p-4 flex justify-between items-center">
@@ -190,11 +210,11 @@ export default function NewEncounterView({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-text-secondary mb-1.5 uppercase tracking-wider">Temp (°C)</label>
-                  <input aria-label="Temperature" type="number" step="0.1" value={temp || ''} onChange={e => setTemp(parseFloat(e.target.value) || 0)} placeholder="36.5" className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors" />
+                  <input aria-label="Temperature" type="number" step="0.1" value={temp || ''} onChange={e => setTemp(parseFloat(e.target.value) || 0)} placeholder="36.5" disabled={isReadOnly} className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors disabled:bg-bg-main disabled:text-text-secondary disabled:cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-text-secondary mb-1.5 uppercase tracking-wider">BP (mmHg)</label>
-                  <input aria-label="Blood pressure" type="text" value={bp} onChange={e => setBp(e.target.value)} placeholder="120/80" className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors" />
+                  <input aria-label="Blood pressure" type="text" value={bp} onChange={e => setBp(e.target.value)} placeholder="120/80" disabled={isReadOnly} className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors disabled:bg-bg-main disabled:text-text-secondary disabled:cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-text-secondary mb-1.5 uppercase tracking-wider">Pulse (bpm)</label>
@@ -311,9 +331,9 @@ export default function NewEncounterView({
               <h4 className="text-xs font-bold text-text-primary">Assessment & Orders</h4>
             </div>
             <div className="p-5 space-y-4">
-              <textarea value={physicalExam} onChange={e => setPhysicalExam(e.target.value)} rows={3} placeholder="Physical examination" className="w-full border border-border rounded-xl px-4 py-2.5 text-[11px] resize-none" />
-              <textarea value={workingDiagnosis} onChange={e => setWorkingDiagnosis(e.target.value)} rows={3} placeholder="Working diagnosis" className="w-full border border-border rounded-xl px-4 py-2.5 text-[11px] font-semibold resize-none" />
-              <textarea value={treatmentPlan} onChange={e => setTreatmentPlan(e.target.value)} rows={3} placeholder="Treatment plan" className="w-full border border-border rounded-xl px-4 py-2.5 text-[11px] resize-none" />
+              <textarea value={physicalExam} onChange={e => setPhysicalExam(e.target.value)} rows={3} placeholder="Physical examination" readOnly={isReadOnly} className={`w-full border border-border rounded-xl px-4 py-2.5 text-[11px] resize-none ${isReadOnly ? 'bg-bg-main text-text-secondary cursor-not-allowed' : ''}`} />
+              <textarea value={workingDiagnosis} onChange={e => setWorkingDiagnosis(e.target.value)} rows={3} placeholder="Working diagnosis" readOnly={isReadOnly} className={`w-full border border-border rounded-xl px-4 py-2.5 text-[11px] font-semibold resize-none ${isReadOnly ? 'bg-bg-main text-text-secondary cursor-not-allowed' : ''}`} />
+              <textarea value={treatmentPlan} onChange={e => setTreatmentPlan(e.target.value)} rows={3} placeholder="Treatment plan" readOnly={isReadOnly} className={`w-full border border-border rounded-xl px-4 py-2.5 text-[11px] resize-none ${isReadOnly ? 'bg-bg-main text-text-secondary cursor-not-allowed' : ''}`} />
             </div>
           </div>
         </div>
@@ -323,16 +343,25 @@ export default function NewEncounterView({
         <div className="flex items-center gap-4 text-[10px] text-text-secondary font-semibold">
           <span className="flex items-center gap-1.5">
             <CloudLightning className={`w-3.5 h-3.5 ${saving ? 'text-warning' : 'text-success'}`} />
-            {saving ? 'Syncing...' : statusText}
+            {saving ? 'Syncing...' : isReadOnly ? 'Read Only' : statusText}
           </span>
           {ai && <span className="flex items-center gap-1.5 text-primary"><Brain className="w-3.5 h-3.5" /> AI Complete</span>}
         </div>
-        <div className="flex gap-3">
-          <button onClick={() => saveDraft()} disabled={saving || !chiefComplaint} className="px-5 py-2 text-[11px] font-bold text-text-secondary bg-white border border-border rounded-xl hover:bg-bg-main disabled:opacity-50">Save Draft</button>
-          <button onClick={handleFinalize} disabled={saving || !workingDiagnosis || !treatmentPlan} className="px-6 py-2 text-[11px] font-bold text-white gradient-primary rounded-xl disabled:opacity-50">
-            Finalize for Review
-          </button>
-        </div>
+        {isReadOnly ? (
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success/10 border border-success/20">
+            <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+            <span className="text-[11px] font-bold text-success capitalize">
+              {patient.latestEncounterStatus?.replace('_', ' ')}
+            </span>
+          </div>
+        ) : (
+          <div className="flex gap-3">
+            <button onClick={() => saveDraft()} disabled={saving || !chiefComplaint} className="px-5 py-2 text-[11px] font-bold text-text-secondary bg-white border border-border rounded-xl hover:bg-bg-main disabled:opacity-50">Save Draft</button>
+            <button onClick={handleFinalize} disabled={saving || !workingDiagnosis || !treatmentPlan} className="px-6 py-2 text-[11px] font-bold text-white gradient-primary rounded-xl disabled:opacity-50">
+              Finalize for Review
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
