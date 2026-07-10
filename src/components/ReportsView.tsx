@@ -29,7 +29,7 @@ export default function ReportsView({ stats, logs, loading, error, onRetry, sear
   const pending = stats?.encounters?.pending_review || 0;
   const credits = Object.values(stats?.credits || {}).reduce((sum, value) => sum + value, 0);
   const reportStats = [
-    { label: 'Overall Efficacy', value: totalEncounters ? `${Math.round((finalized / totalEncounters) * 100)}%` : '0%', trend: 'Backend' },
+    { label: 'Overall Efficacy', value: totalEncounters ? `${Math.round((finalized / totalEncounters) * 100)}%` : '0%', trend: 'System' },
     { label: 'Unresolved Flags', value: pending, trend: 'Pending' },
     { label: 'Diagnostic Audits', value: totalEncounters, trend: 'Logged' },
     { label: 'Credit Records', value: credits, trend: 'Verified' },
@@ -47,7 +47,7 @@ export default function ReportsView({ stats, logs, loading, error, onRetry, sear
             <FileText className="w-4 h-4 text-primary" />
             <h3 className="text-xs font-bold text-text-primary">Clinical Audit & Performance Reports</h3>
           </div>
-          <p className="text-[10px] text-text-secondary font-medium">Compliance tracking from backend activity and portfolio statistics</p>
+          <p className="text-[10px] text-text-secondary font-medium">Compliance tracking from clinical activity and portfolio statistics</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
           {reportStats.map((stat) => (
@@ -84,7 +84,7 @@ export default function ReportsView({ stats, logs, loading, error, onRetry, sear
                 <p className="text-[10px] text-text-secondary pl-6.5 ml-[26px]">{item.description}</p>
               </div>
             ))}
-            {filteredLogs.length === 0 && <div className="p-8 text-center text-xs text-text-secondary">No backend activity matches your search.</div>}
+            {filteredLogs.length === 0 && <div className="p-8 text-center text-xs text-text-secondary">No clinical activity matches your search.</div>}
           </div>
         </div>
 
@@ -95,7 +95,7 @@ export default function ReportsView({ stats, logs, loading, error, onRetry, sear
           </div>
           <div className="p-5">
             <p className="text-[11px] text-text-secondary leading-relaxed mb-4">
-              Backend encounter counts show {finalized} finalized encounters out of {totalEncounters} total tracked encounters.
+              Clinical encounter counts show {finalized} finalized encounters out of {totalEncounters} total tracked encounters.
             </p>
             <div className="space-y-3">
               {Object.entries(stats?.encounters || {}).map(([label, value]) => {

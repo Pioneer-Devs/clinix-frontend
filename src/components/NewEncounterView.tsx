@@ -59,8 +59,10 @@ export default function NewEncounterView({
     setChiefComplaint(patient.chiefComplaint === 'No active complaint recorded' ? '' : patient.chiefComplaint);
     setWorkingDiagnosis(patient.workingDiagnosis || '');
     setEncounterId(patient.latestEncounterId || '');
-    setSymptoms([]);
-    setAi(null);
+    setSymptoms(patient.associatedSymptoms || []);
+    setPhysicalExam(patient.examNotes || '');
+    setTreatmentPlan(patient.treatmentPlan || '');
+    setAi(patient.aiAnalysis || null);
   }, [patient]);
 
   if (loading) {
@@ -237,7 +239,7 @@ export default function NewEncounterView({
                 <Zap className="w-2.5 h-2.5" /> {aiLoading ? 'Analyzing' : 'Run AI'}
               </button>
             </div>
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-3 max-h-80 overflow-y-auto">
               {aiLoading && <p className="text-xs text-text-secondary font-semibold">Analyzing encounter...</p>}
               {ai ? (
                 <>
@@ -247,8 +249,55 @@ export default function NewEncounterView({
                       <span className="text-[11px] font-extrabold text-success">{Math.round(ai.confidence * 100)}%</span>
                     </div>
                     <p className="text-sm font-bold text-text-primary">{ai.primaryDiagnosis}</p>
+                    {ai.urgency && (
+                      <div className="mt-2 text-[10px] font-bold px-2 py-1 rounded inline-block bg-accent/10 text-accent uppercase tracking-wider">
+                        Urgency: {ai.urgency}
+                      </div>
+                    )}
                   </div>
-                  {ai.differential?.map((d) => <p key={d.condition} className="text-[10px] text-text-secondary">{d.condition}: {Math.round(d.probability * 100)}%</p>)}
+                  
+                  {ai.differential && ai.differential.length > 0 && (
+                    <div>
+                      <h5 className="text-[10px] font-bold text-text-secondary uppercase mb-1">Differential</h5>
+                      {ai.differential.map((d) => (
+                        <p key={d.condition} className="text-[10px] text-text-secondary flex justify-between">
+                          <span>{d.condition}</span>
+                          <span className="font-semibold">{Math.round(d.probability * 100)}%</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  {ai.recommendedInvestigations && ai.recommendedInvestigations.length > 0 && (
+                    <div>
+                      <h5 className="text-[10px] font-bold text-text-secondary uppercase mb-1">Investigations</h5>
+                      <ul className="list-disc pl-4 text-[10px] text-text-secondary space-y-0.5">
+                        {ai.recommendedInvestigations.map((inv, idx) => (
+                          <li key={idx}>{inv}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {ai.mcpActions && ai.mcpActions.length > 0 && (
+                    <div>
+                      <h5 className="text-[10px] font-bold text-text-secondary uppercase mb-1">Automated Actions</h5>
+                      <div className="space-y-1.5">
+                        {ai.mcpActions.map((mcp, idx) => (
+                          <div key={idx} className="bg-primary/5 border border-primary/10 p-2 rounded-md">
+                            <p className="text-[9px] font-bold text-primary mb-1 uppercase tracking-wider">{mcp.skill}</p>
+                            {mcp.actions?.map((act, i) => (
+                              <p key={i} className="text-[10px] text-text-secondary">
+                                • {act.type}: {act.drug || act.test || 'Action Executed'} 
+                                {act.stock !== undefined && ` (Stock: ${act.stock})`}
+                                {act.available !== undefined && ` (${act.available ? 'Available' : 'Unavailable'})`}
+                              </p>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <p className="text-xs text-text-secondary">Save the presentation and run AI to retrieve backend analysis.</p>
