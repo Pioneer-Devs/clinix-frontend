@@ -64,7 +64,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         hospital,
         mdcn_reg_no: role === 'supervisor' ? mdcnRegNo : undefined,
       });
-      setView('verification');
+      // Bypass verification step
+      const tokenResponse = await login({ email, password });
+      const userModule = await import('../lib/api');
+      const apiUser = await userModule.getMe(tokenResponse.access_token);
+      onLogin(mapUser(apiUser), tokenResponse.access_token);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to create account.');
     } finally {

@@ -328,7 +328,7 @@ export default function NewEncounterView({
           {ai && <span className="flex items-center gap-1.5 text-primary"><Brain className="w-3.5 h-3.5" /> AI Complete</span>}
         </div>
         <div className="flex gap-3">
-          <button onClick={saveDraft} disabled={saving || !chiefComplaint} className="px-5 py-2 text-[11px] font-bold text-text-secondary bg-white border border-border rounded-xl hover:bg-bg-main disabled:opacity-50">Save Draft</button>
+          <button onClick={() => saveDraft()} disabled={saving || !chiefComplaint} className="px-5 py-2 text-[11px] font-bold text-text-secondary bg-white border border-border rounded-xl hover:bg-bg-main disabled:opacity-50">Save Draft</button>
           <button onClick={handleFinalize} disabled={saving || !workingDiagnosis || !treatmentPlan} className="px-6 py-2 text-[11px] font-bold text-white gradient-primary rounded-xl disabled:opacity-50">
             Finalize for Review
           </button>
