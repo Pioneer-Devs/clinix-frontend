@@ -218,30 +218,32 @@ export default function NewEncounterView({
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-text-secondary mb-1.5 uppercase tracking-wider">Pulse (bpm)</label>
-                  <input aria-label="Pulse" type="number" value={pulse || ''} onChange={e => setPulse(parseInt(e.target.value) || 0)} placeholder="72" className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors" />
+                  <input aria-label="Pulse" type="number" value={pulse || ''} onChange={e => setPulse(parseInt(e.target.value) || 0)} placeholder="72" disabled={isReadOnly} className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors disabled:bg-bg-main disabled:text-text-secondary disabled:cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-text-secondary mb-1.5 uppercase tracking-wider">SpO2 (%)</label>
-                  <input aria-label="Oxygen saturation" type="number" value={spo2 || ''} onChange={e => setSpo2(parseInt(e.target.value) || 0)} placeholder="98" className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors" />
+                  <input aria-label="Oxygen saturation" type="number" value={spo2 || ''} onChange={e => setSpo2(parseInt(e.target.value) || 0)} placeholder="98" disabled={isReadOnly} className="w-full border border-border rounded-xl px-3 py-2 text-xs font-mono focus:border-primary focus:outline-none transition-colors disabled:bg-bg-main disabled:text-text-secondary disabled:cursor-not-allowed" />
                 </div>
               </div>
             </div>
             <div className="p-5 space-y-4">
-              <textarea value={chiefComplaint} onChange={e => setChiefComplaint(e.target.value)} rows={2} placeholder="Chief complaint" className="w-full border border-border rounded-xl px-4 py-2.5 text-xs resize-none" />
+              <textarea value={chiefComplaint} onChange={e => setChiefComplaint(e.target.value)} rows={2} placeholder="Chief complaint" readOnly={isReadOnly} className={`w-full border border-border rounded-xl px-4 py-2.5 text-xs resize-none ${isReadOnly ? 'bg-bg-main text-text-secondary cursor-not-allowed' : ''}`} />
               <div>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {symptoms.map((s) => (
                     <span key={s} className="bg-primary/10 text-primary px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-[10px] font-semibold">
                       {s}
-                      <button onClick={() => setSymptoms(symptoms.filter((item) => item !== s))}><X className="w-3 h-3" /></button>
+                      {!isReadOnly && <button onClick={() => setSymptoms(symptoms.filter((item) => item !== s))}><X className="w-3 h-3" /></button>}
                     </span>
                   ))}
                 </div>
-                <input type="text" value={newSymptomText} onChange={e => setNewSymptomText(e.target.value)} onKeyDown={handleAddSymptom} placeholder="Type symptom and press Enter..." className="w-full border border-border rounded-xl px-4 py-2 text-[11px]" />
+                {!isReadOnly && (
+                  <input type="text" value={newSymptomText} onChange={e => setNewSymptomText(e.target.value)} onKeyDown={handleAddSymptom} placeholder="Type symptom and press Enter..." className="w-full border border-border rounded-xl px-4 py-2 text-[11px]" />
+                )}
               </div>
               <div className="flex gap-2">
                 {(['Mild', 'Moderate', 'Severe', 'Emergency'] as const).map(sev => (
-                  <button key={sev} onClick={() => setSeverity(sev)} className={`flex-1 py-2 rounded-xl text-[10px] font-bold border ${severity === sev ? 'gradient-primary text-white border-primary' : 'bg-white text-text-secondary border-border'}`}>{sev}</button>
+                  <button key={sev} onClick={() => !isReadOnly && setSeverity(sev)} className={`flex-1 py-2 rounded-xl text-[10px] font-bold border ${severity === sev ? 'gradient-primary text-white border-primary' : 'bg-white text-text-secondary border-border'} ${isReadOnly ? 'cursor-not-allowed opacity-70' : ''}`}>{sev}</button>
                 ))}
               </div>
             </div>
@@ -255,9 +257,11 @@ export default function NewEncounterView({
                 <Brain className="w-3.5 h-3.5 text-primary" />
                 <h4 className="text-[11px] font-bold text-text-primary uppercase tracking-wide">AI Diagnosis Engine</h4>
               </div>
-              <button onClick={runAi} disabled={aiLoading || !chiefComplaint} className="flex items-center gap-1.5 px-3 py-1 rounded border border-primary/20 bg-primary/5 text-[9px] font-bold text-primary uppercase disabled:opacity-50">
-                <Zap className="w-2.5 h-2.5" /> {aiLoading ? 'Analyzing' : 'Run AI'}
-              </button>
+              {!isReadOnly && (
+                <button onClick={runAi} disabled={aiLoading || !chiefComplaint} className="flex items-center gap-1.5 px-3 py-1 rounded border border-primary/20 bg-primary/5 text-[9px] font-bold text-primary uppercase disabled:opacity-50">
+                  <Zap className="w-2.5 h-2.5" /> {aiLoading ? 'Analyzing' : 'Run AI'}
+                </button>
+              )}
             </div>
             <div className="p-4 space-y-3 max-h-80 overflow-y-auto">
               {aiLoading && <p className="text-xs text-text-secondary font-semibold">Analyzing encounter...</p>}
