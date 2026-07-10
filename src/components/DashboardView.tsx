@@ -43,6 +43,8 @@ export default function DashboardView({
 }: DashboardProps) {
   if (loading) return <Skeleton />;
 
+  const activePatients = patients.filter((p) => p.isActiveQueueItem || p.latestEncounterStatus === 'rejected');
+
   if (error) {
     return (
       <div className="card-base p-8 text-center">
@@ -95,7 +97,7 @@ export default function DashboardView({
             <button onClick={onViewAllQueue} className="text-[10px] font-bold text-primary hover:underline uppercase">View All</button>
           </div>
           <div className="divide-y divide-border-light bg-white">
-            {patients.slice(0, 6).map((p) => (
+            {activePatients.slice(0, 6).map((p) => (
               <div key={p.id} className="grid grid-cols-12 gap-4 px-5 py-3 items-center hover:bg-bg-main/50">
                 <div className="col-span-3 min-w-0">
                   <h4 className="text-[11px] font-bold text-text-primary uppercase truncate">{p.firstName} {p.lastName}</h4>
@@ -113,7 +115,7 @@ export default function DashboardView({
                 </div>
               </div>
             ))}
-            {patients.length === 0 && <div className="p-8 text-center text-xs text-text-secondary">No patients returned from the backend.</div>}
+            {activePatients.length === 0 && <div className="p-8 text-center text-xs text-text-secondary">No active patients in the queue.</div>}
           </div>
         </div>
 
