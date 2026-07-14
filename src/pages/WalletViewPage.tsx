@@ -49,12 +49,37 @@ export default function WalletViewPage() {
         return;
       }
 
-      try {
-        const datasetUrl = joinPodPath(pod, `clinix/encounters/${enc}`);
+      const fetchFromPod = async (podUrl: string) => {
+        const datasetUrl = joinPodPath(podUrl, `clinix/encounters/${enc}`);
         const dataset = await getSolidDataset(datasetUrl);
         const thing = getThing(dataset, `${datasetUrl}#encounter`);
         if (!thing) {
           throw new Error('The health record was not found in this POD.');
+        }
+        return thing;
+      };
+
+      try {
+        let thing;
+        try {
+          thing = await fetchFromPod(pod);
+        } catch (firstErr) {
+          // Pod data may have been wiped after a redeploy — attempt recovery
+          setError('');
+          setLoading(true);
+          const apiBase =
+            (import.meta as Record<string, Record<string, string>>).env
+              ?.VITE_API_BASE_URL || '/api/v1';
+          const recoverRes = await fetch(
+            `${apiBase}/wallet/recover?enc=${encodeURIComponent(enc)}`,
+            { method: 'POST' },
+          );
+          if (!recoverRes.ok) {
+            throw firstErr; // recovery failed — show original error
+          }
+          const recoverData = await recoverRes.json();
+          const freshPod = recoverData.solid_pod_url || pod;
+          thing = await fetchFromPod(freshPod);
         }
 
         const vitalsText = getStringNoLocale(thing, `${CLINIX}vitals`) || '{}';
